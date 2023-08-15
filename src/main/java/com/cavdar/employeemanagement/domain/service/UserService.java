@@ -1,8 +1,10 @@
 package com.cavdar.employeemanagement.domain.service;
 
 import com.cavdar.employeemanagement.domain.model.Authority;
+import com.cavdar.employeemanagement.domain.model.Employee;
 import com.cavdar.employeemanagement.domain.model.User;
 import com.cavdar.employeemanagement.domain.repository.UserRepository;
+import com.cavdar.employeemanagement.util.AlphaNumericConverter;
 import com.cavdar.employeemanagement.util.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,11 +18,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AlphaNumericConverter alphaNumericConverter;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AlphaNumericConverter alphaNumericConverter) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.alphaNumericConverter = alphaNumericConverter;
     }
 
     public User updateUserById(User updatedUser, Long id) {
@@ -52,6 +57,10 @@ public class UserService {
     public User saveUserAndEncryptPassword(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
+    }
+
+    public String getPlainPassword(Employee employee) {
+        return alphaNumericConverter.convert(employee.getFirstName().toLowerCase() + employee.getDateOfBirth().getYear());
     }
 
     public User saveUser(User user) {

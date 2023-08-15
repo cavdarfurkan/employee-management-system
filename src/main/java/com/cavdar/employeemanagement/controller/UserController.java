@@ -2,10 +2,10 @@ package com.cavdar.employeemanagement.controller;
 
 import com.cavdar.employeemanagement.domain.model.User;
 import com.cavdar.employeemanagement.domain.repository.AuthorityRepository;
+import com.cavdar.employeemanagement.domain.service.EmployeeService;
 import com.cavdar.employeemanagement.domain.service.UserService;
-import com.cavdar.employeemanagement.payload.response.RandomUsersResponse;
+import com.cavdar.employeemanagement.payload.response.RandomUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +21,13 @@ public class UserController {
 
     private final UserService userService;
     private final AuthorityRepository authorityRepository;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public UserController(UserService userService, AuthorityRepository authorityRepository) {
+    public UserController(UserService userService, AuthorityRepository authorityRepository, EmployeeService employeeService) {
         this.userService = userService;
         this.authorityRepository = authorityRepository;
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/{id}")
@@ -37,9 +39,17 @@ public class UserController {
     @GetMapping("/random")
     public ResponseEntity<?> getRandomUsers() {
         User admin = this.userService.getRandomUserByAuthority(authorityRepository.findByAuthority("ROLE_ADMIN"));
-        User manager = this.userService.getRandomUserByAuthority(authorityRepository.findByAuthority("ROLE_MANAGER"));
-        User employee = this.userService.getRandomUserByAuthority(authorityRepository.findByAuthority("ROLE_EMPLOYEE"), List.of(2L));
+        User randomManager = this.userService.getRandomUserByAuthority(authorityRepository.findByAuthority("ROLE_MANAGER"));
+        User randomEmployee = this.userService.getRandomUserByAuthority(authorityRepository.findByAuthority("ROLE_EMPLOYEE"), List.of(2L));
 
-        return ResponseEntity.ok().body(new RandomUsersResponse(admin, manager, employee));
+        admin.setPassword("123123123");
+        randomManager.setPassword(userService.getPlainPassword(employeeService.getEmployeeByUser(randomManager)));
+        randomEmployee.setPassword(userService.getPlainPassword(employeeService.getEmployeeByUser(randomEmployee)));
+
+        return ResponseEntity.ok().body(List.of(
+                new RandomUserResponse(admin),
+                new RandomUserResponse(randomManager),
+                new RandomUserResponse(randomEmployee))
+        );
     }
 }

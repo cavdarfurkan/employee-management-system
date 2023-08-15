@@ -52,7 +52,7 @@ public class DatabaseLoader implements CommandLineRunner {
         addAdmin();
         addDepartments();
         addJobs();
-        addEmployees();
+
         generateSampleEmployees(employeeCount);
         generateSampleTasks(employeeCount * 5);
         generateSampleTimeTrackings(employeeCount * 10);
@@ -108,36 +108,6 @@ public class DatabaseLoader implements CommandLineRunner {
         jobs.add(new Job().setName("Human Resources").setMinSalary(3500).setMaxSalary(10000));
 
         this.jobRepository.saveAll(jobs);
-    }
-
-    private void addEmployees() {
-        Employee emp1 = new Employee();
-        emp1.setFirstName("John");
-        emp1.setLastName("Doe");
-        emp1.setGender(Gender.MALE);
-        emp1.setDateOfBirth(LocalDate.of(1991, 12, 25));
-        emp1.setPhoneNumber("+48123123123");
-        emp1.setAddress("Warsaw/Poland");
-        emp1.setHireDate(LocalDate.of(2022, 3, 6));
-        this.departmentRepository.findById(1L).ifPresent(emp1::setDepartment);
-        this.jobRepository.findById(2L).ifPresent(emp1::setJob);
-        emp1.setSalary(6000);
-
-        Employee emp2 = new Employee();
-        emp2.setFirstName("Furkan");
-        emp2.setLastName("Çavdar");
-        emp2.setGender(Gender.MALE);
-        emp2.setDateOfBirth(LocalDate.of(1998, 2, 2));
-        emp2.setPhoneNumber("+905312337098");
-        emp2.setAddress("Warsaw/Poland");
-        emp2.setHireDate(LocalDate.of(2023, 7, 15));
-        this.departmentRepository.findById(1L).ifPresent(emp2::setDepartment);
-        this.jobRepository.findById(1L).ifPresent(emp2::setJob);
-        emp2.setSalary(5000);
-        emp2.setManager(emp1);
-
-        this.employeeService.saveEmployeeAndUser(emp1);
-        this.employeeService.saveEmployeeAndUser(emp2);
     }
 
     private void generateSampleEmployees(int numberOfEmployees) {

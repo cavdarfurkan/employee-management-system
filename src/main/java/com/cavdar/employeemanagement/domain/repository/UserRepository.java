@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             where authorities.authority = ?1 and u.id not in ?2
             order by RAND() LIMIT 1""")
     User randomUserByAuthority(String authority, Collection<Long> ids);
+
+
 }
