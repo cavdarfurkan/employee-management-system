@@ -98,12 +98,11 @@ const Jobs = () => {
   }, [searchText]);
 
   const contextAction = useMemo(() => {
-    const handleDelete = () => {
+    const handleDelete = async () => {
       if (window.confirm("Are you sure you want to delete?")) {
-        selectedRows.forEach((row) => {
-          JobService.deleteJob(row.id);
-        });
-
+        await Promise.all(
+          selectedRows.map((row) => JobService.deleteJob(row.id))
+        );
         setToggleClearedRows(!toggleClearedRows);
       }
     };

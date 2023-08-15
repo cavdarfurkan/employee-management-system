@@ -103,12 +103,11 @@ const Task = () => {
   }, [selectedEmployeeId, toggleClearedRows, statusChanged]);
 
   const contextAction = useMemo(() => {
-    const handleDelete = () => {
+    const handleDelete = async () => {
       if (window.confirm("Are you sure you want to delete?")) {
-        selectedRows.forEach((row) => {
-          TaskService.deleteTask(row.id);
-        });
-
+        await Promise.all(
+          selectedRows.map((row) => TaskService.deleteTask(row.id))
+        );
         setToggleClearedRows(!toggleClearedRows);
       }
     };

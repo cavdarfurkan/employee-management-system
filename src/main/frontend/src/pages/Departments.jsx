@@ -98,12 +98,11 @@ const Departments = () => {
   }, [searchText]);
 
   const contextAction = useMemo(() => {
-    const handleDelete = () => {
+    const handleDelete = async () => {
       if (window.confirm("Are you sure you want to delete?")) {
-        selectedRows.forEach((row) => {
-          DepartmentService.deleteDepartment(row.id);
-        });
-
+        await Promise.all(
+          selectedRows.map((row) => DepartmentService.deleteDepartment(row.id))
+        );
         setToggleClearedRows(!toggleClearedRows);
       }
     };
