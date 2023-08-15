@@ -200,7 +200,14 @@ const LoginPage = () => {
                 }
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={
+                  <Checkbox
+                    value="remember"
+                    color="primary"
+                    checked={true}
+                    size="small"
+                  />
+                }
                 label="Remember me"
                 disabled
               />
@@ -253,6 +260,14 @@ const LoginPage = () => {
                   direction={"column"}
                   spacing={1}
                 >
+                  <Typography variant="h6">
+                    {index === 0
+                      ? "Admin"
+                      : index === 1
+                      ? "Manager"
+                      : "Employee"}
+                  </Typography>
+                  <Divider variant="middle" />
                   <Grid item>
                     <Box display="flex" alignItems="center">
                       <Typography variant="body1">
