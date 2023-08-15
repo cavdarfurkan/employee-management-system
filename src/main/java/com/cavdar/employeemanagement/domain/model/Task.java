@@ -30,8 +30,8 @@ public class Task {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private TaskStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
 
     public Task() {

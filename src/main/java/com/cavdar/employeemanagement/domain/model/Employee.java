@@ -59,6 +59,9 @@ public class Employee {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "employee")
     private List<TimeTracking> timeTracking;
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "employee")
+    private List<Task> tasks;
+
     public Employee() {
     }
 
