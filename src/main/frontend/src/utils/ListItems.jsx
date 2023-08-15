@@ -27,6 +27,7 @@ const MyListItemButton = ({
   icon,
   userRoles,
   roles,
+  isDisabled,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,7 +49,11 @@ const MyListItemButton = ({
     <>
       {(roles.length === 0 ||
         roles.some((role) => userRoles.includes(role))) && (
-        <ListItemButton selected={isSelected} onClick={handleItemClick}>
+        <ListItemButton
+          selected={isSelected}
+          onClick={handleItemClick}
+          disabled={isDisabled}
+        >
           <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText primary={primaryText} />
         </ListItemButton>
@@ -64,6 +69,11 @@ MyListItemButton.propTypes = {
   icon: PropTypes.element.isRequired,
   userRoles: PropTypes.array.isRequired,
   roles: PropTypes.array.isRequired,
+  isDisabled: PropTypes.bool,
+};
+
+MyListItemButton.defaultProps = {
+  isDisabled: false,
 };
 
 const ListItems = ({ userRoles }) => {
@@ -133,6 +143,7 @@ const ListItems = ({ userRoles }) => {
         updatePrimaryText={updateItemPrimaryText}
         userRoles={userRoles}
         roles={[ROLE_EMPLOYEE]}
+        isDisabled={true}
       />
 
       <MyListItemButton
@@ -142,6 +153,7 @@ const ListItems = ({ userRoles }) => {
         updatePrimaryText={updateItemPrimaryText}
         userRoles={userRoles}
         roles={[ROLE_EMPLOYEE]}
+        isDisabled={true}
       />
 
       <MyListItemButton
@@ -151,6 +163,7 @@ const ListItems = ({ userRoles }) => {
         updatePrimaryText={updateItemPrimaryText}
         userRoles={userRoles}
         roles={[ROLE_EMPLOYEE]}
+        isDisabled={true}
       />
 
       <MyListItemButton
@@ -160,6 +173,7 @@ const ListItems = ({ userRoles }) => {
         updatePrimaryText={updateItemPrimaryText}
         userRoles={userRoles}
         roles={[ROLE_EMPLOYEE]}
+        isDisabled={true}
       />
     </Fragment>
   );
