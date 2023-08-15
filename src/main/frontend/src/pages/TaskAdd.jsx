@@ -8,6 +8,7 @@ import { useState } from "react";
 import TaskForm from "../components/forms/TaskForm";
 import TaskService from "../services/taskService";
 import { useLoaderData } from "react-router-dom";
+import { extractEmployeeId } from "../utils/jwtUtils";
 
 const TaskAdd = () => {
   const currentUserRoles = useLoaderData();
@@ -16,7 +17,7 @@ const TaskAdd = () => {
     title: "",
     description: "",
     dueDate: dayjs(),
-    employee: { id: 1 },
+    employee: { id: extractEmployeeId() },
   });
 
   const handleSubmit = (event) => {
