@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
@@ -38,11 +38,11 @@ const EmployeeEdit = () => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const printEmployeeCallback = useMemo(() => {
-    if (Object.keys(employee).length !== 0) {
-      console.log(employee);
-    }
-  }, [employee]);
+  // const printEmployeeCallback = useMemo(() => {
+  //   if (Object.keys(employee).length !== 0) {
+  //     console.log(employee);
+  //   }
+  // }, [employee]);
 
   if (loading) {
     return "Loading...";

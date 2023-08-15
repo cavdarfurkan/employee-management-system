@@ -4,6 +4,7 @@ import { Controller } from "react-hook-form";
 import PropTypes from "prop-types";
 
 const ControllerInputField = ({
+  value,
   control,
   name,
   rules,
@@ -20,6 +21,7 @@ const ControllerInputField = ({
     <>
       <Controller
         control={control}
+        defaultValue={value}
         name={name}
         rules={rules}
         render={({ field }) => (
@@ -30,7 +32,6 @@ const ControllerInputField = ({
             size={size}
             label={label}
             type={type}
-            value={undefined}
             error={!!error}
             helperText={helperText}
             autoFocus={autoFocus}
@@ -43,6 +44,7 @@ const ControllerInputField = ({
 };
 
 ControllerInputField.propTypes = {
+  value: PropTypes.string,
   control: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   rules: PropTypes.object.isRequired,

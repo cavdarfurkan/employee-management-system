@@ -25,12 +25,6 @@
   margin: -2rem;
 }
 
-.center-container {
-  display: flex;
-  align-items: center;
-  min-height: 100%;
-}
-
 a {
   font-weight: 500;
   color: #646cff;

@@ -3,6 +3,7 @@ import ControllerInputField from "../components/ControllerInputField";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOnIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -13,16 +14,26 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Paper from "@mui/material/Paper";
 
 import { useForm } from "react-hook-form";
 import AuthService from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FormHelperText, IconButton, InputAdornment } from "@mui/material";
+import {
+  ButtonBase,
+  Divider,
+  FormHelperText,
+  Grid,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { validateJwtExpiration } from "../utils/jwtUtils";
+import UserService from "../services/userService";
 
 const LoginPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   const [isError, setIsError] = useState(false);
@@ -30,19 +41,34 @@ const LoginPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [users, setUsers] = useState([]);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   useEffect(() => {
     const currentUser = AuthService.getCurrentUser();
-
     if (currentUser && validateJwtExpiration()) {
       navigate("/");
     }
-  });
+
+    fetchRandomUsers();
+  }, [navigate]);
+
+  const fetchRandomUsers = async () => {
+    await UserService.getRandomUsers().then((data) => {
+      const usersArray = data.map((user) => ({
+        username: user.username,
+        password: user.password,
+      }));
+
+      setUsers(usersArray);
+    });
+  };
 
   const usernameRules = {
     required: "Username is required",
@@ -99,16 +125,22 @@ const LoginPage = () => {
       .catch((error) => {
         setIsError(true);
         setErrorMessage(error);
+        fetchRandomUsers();
       });
   };
 
   return (
     <>
-      <div className="center-container">
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Paper
-            elevation="3"
+      <Grid
+        container
+        justifyContent={"space-evenly"}
+        alignItems={"center"}
+        minHeight={"100%"}
+      >
+        <CssBaseline />
+        <Grid item xs={12} md={6}>
+          <Container
+            maxWidth="xs"
             sx={{
               p: 5,
               display: "flex",
@@ -127,6 +159,7 @@ const LoginPage = () => {
               sx={{ mt: 1 }}
             >
               <ControllerInputField
+                value={username}
                 control={control}
                 name="username"
                 rules={usernameRules}
@@ -139,6 +172,7 @@ const LoginPage = () => {
                 autoFocus={true}
               />
               <ControllerInputField
+                value={password}
                 control={control}
                 name="password"
                 rules={passwordRules}
@@ -168,6 +202,7 @@ const LoginPage = () => {
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
+                disabled
               />
               {isError && <FormHelperText error>{errorMessage}</FormHelperText>}
               <Button
@@ -179,12 +214,70 @@ const LoginPage = () => {
                 Sign In
               </Button>
               <Link href="#" variant="body2">
-                Forgot password?
+                <Typography>Forgot password?</Typography>
               </Link>
             </Box>
-          </Paper>
-        </Container>
-      </div>
+          </Container>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Container
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {users.map((user, index) => (
+              <Box
+                key={index}
+                component={ButtonBase}
+                minWidth={"75%"}
+                padding={2}
+                margin={1}
+                borderRadius={2}
+                sx={{
+                  boxShadow:
+                    "0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
+                  ":hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.04)",
+                  },
+                }}
+                onClick={() => {
+                  setUsername(user.username);
+                  setPassword(user.password);
+                  setValue("username", user.username);
+                  setValue("password", user.password);
+                }}
+              >
+                <Grid
+                  container
+                  justifyContent={"space-around"}
+                  direction={"column"}
+                  spacing={1}
+                >
+                  <Grid item>
+                    <Box display="flex" alignItems="center">
+                      <Typography variant="body1">
+                        Username: {user.username}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box display="flex" alignItems="center">
+                      <Typography variant="body1">
+                        Password: {user.password}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+            ))}
+            <Divider>
+              <IconButton onClick={fetchRandomUsers}>
+                <RefreshIcon />
+              </IconButton>
+            </Divider>
+          </Container>
+        </Grid>
+      </Grid>
     </>
   );
 };
