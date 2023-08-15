@@ -1,5 +1,6 @@
 package com.cavdar.employeemanagement.domain.service;
 
+import com.cavdar.employeemanagement.domain.model.Authority;
 import com.cavdar.employeemanagement.domain.model.User;
 import com.cavdar.employeemanagement.domain.repository.UserRepository;
 import com.cavdar.employeemanagement.util.exception.UserNotFoundException;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class UserService {
@@ -61,5 +64,16 @@ public class UserService {
 
     public boolean isExistsByEmail(String email) {
         return this.userRepository.existsByEmail(email);
+    }
+
+    public User getRandomUserByAuthority(Authority authority, Collection<Long> ids) {
+        if (ids.isEmpty()) {
+            return getRandomUserByAuthority(authority);
+        }
+        return this.userRepository.randomUserByAuthority(authority.getAuthority(), ids);
+    }
+
+    public User getRandomUserByAuthority(Authority authority) {
+        return this.userRepository.randomUserByAuthority(authority.getAuthority());
     }
 }
