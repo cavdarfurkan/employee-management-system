@@ -57,6 +57,7 @@ public class AuthController {
         this.authorityRepository = authorityRepository;
     }
 
+    @Deprecated
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (this.userService.isExistsByUsername(user.getUsername())) {
@@ -74,6 +75,19 @@ public class AuthController {
                 .body(entityModel);
     }
 
+    /**
+     * The `processLogin` function handles the login process by authenticating the user, generating a JWT
+     * token, creating a refresh token, and returning the tokens along with the user details in the
+     * response.
+     *
+     * @param loginRequest The `loginRequest` parameter is an object of type `LoginRequest`. It is
+     *                     annotated with `@RequestBody`, which means that it will be deserialized from the request body of the
+     *                     HTTP POST request.
+     * @return The method is returning a ResponseEntity object. If the authentication is successful, it
+     * returns a ResponseEntity with a status of OK and a body containing a JwtResponse object. If the
+     * authentication fails, it returns a ResponseEntity with a status of UNAUTHORIZED and a body
+     * containing a MessageResponse object.
+     */
     @PostMapping("/login")
     public ResponseEntity<?> processLogin(@Valid @RequestBody LoginRequest loginRequest) {
         try {
@@ -98,6 +112,19 @@ public class AuthController {
         }
     }
 
+    /**
+     * The `refreshToken` function in Java handles the refreshing of access tokens by verifying the
+     * expiration of the refresh token and generating a new access token.
+     *
+     * @param request The `request` parameter is an object of type `TokenRefreshRequest`. It is annotated
+     *                with `@Valid` to indicate that it should be validated before processing. The `TokenRefreshRequest`
+     *                class likely contains fields for the refresh token, which is obtained from the request body.
+     * @return The method is returning a ResponseEntity object. If the refresh token is valid and not
+     * expired, it returns a ResponseEntity with HTTP status code 200 (OK) and a body containing a
+     * TokenRefreshResponse object, which includes a new access token and the refresh token. If the refresh
+     * token is invalid or expired, it returns a ResponseEntity with HTTP status code 403 (FORBIDDEN) and a
+     * body containing
+     */
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
         try {
@@ -117,11 +144,23 @@ public class AuthController {
         }
     }
 
+    /**
+     * The above function processes a logout request by deleting the refresh token associated with the
+     * given user ID.
+     *
+     * @param id The `id` parameter is of type `Long` and is used to identify the user for whom the refresh
+     *           token needs to be deleted.
+     */
     @PostMapping("/logout")
     public void processLogout(@RequestParam Long id) {
         refreshTokenService.deleteByUserId(id);
     }
 
+    /**
+     * The above function returns a collection of all roles with links to itself.
+     *
+     * @return The method is returning a CollectionModel of EntityModel objects representing authorities.
+     */
     @GetMapping("/all-roles")
     @PreAuthorize("hasRole('ADMIN')")
     public CollectionModel<EntityModel<Authority>> getAllRoles() {

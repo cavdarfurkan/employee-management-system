@@ -36,6 +36,13 @@ public class UserController {
 
     }
 
+/**
+ * The getRandomUsers function retrieves random users with specific authorities and returns them as a
+ * list of RandomUserResponse objects.
+ * 
+ * @return The method is returning a ResponseEntity object with a body containing a list of
+ * RandomUserResponse objects.
+ */
     @GetMapping("/random")
     public ResponseEntity<?> getRandomUsers() {
         User admin = this.userService.getRandomUserByAuthority(authorityRepository.findByAuthority("ROLE_ADMIN"));
