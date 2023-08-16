@@ -9,15 +9,14 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import AuthService from "../services/authService";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   ButtonBase,
@@ -138,6 +137,13 @@ const LoginPage = () => {
         minHeight={"100%"}
       >
         <CssBaseline />
+
+        <Link to="/swagger-ui" reloadDocument>
+          <Button sx={{ position: "absolute", top: 10, left: 10 }}>
+            <Typography variant="overline">API DOC</Typography>
+          </Button>
+        </Link>
+
         <Grid item xs={12} md={6}>
           <Container
             maxWidth="xs"
@@ -148,7 +154,7 @@ const LoginPage = () => {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <Avatar sx={{ m: 1, backgroundColor: "primary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography variant="h5">Sign in</Typography>
