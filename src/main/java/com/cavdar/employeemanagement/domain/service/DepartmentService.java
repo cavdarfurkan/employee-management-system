@@ -2,7 +2,6 @@ package com.cavdar.employeemanagement.domain.service;
 
 import com.cavdar.employeemanagement.domain.model.Department;
 import com.cavdar.employeemanagement.domain.repository.DepartmentRepository;
-import com.cavdar.employeemanagement.domain.repository.EmployeeRepository;
 import com.cavdar.employeemanagement.util.exception.DepartmentNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 public class DepartmentService {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DepartmentService.class);
 
     private final DepartmentRepository departmentRepository;
     private final EmployeeService employeeService;
@@ -53,12 +52,11 @@ public class DepartmentService {
 
         department.setName(updatedDepartment.getName());
 
-        return this.departmentRepository.save(department);
+        return saveDepartment(department);
     }
 
     public void deleteDepartmentById(Long id) {
-        Department department = this.departmentRepository.findById(id)
-                .orElseThrow(() -> new DepartmentNotFoundException(id));
+        Department department = getDepartmentById(id);
 
         this.employeeService.updateDepartmentByDepartment(null, department);
 
