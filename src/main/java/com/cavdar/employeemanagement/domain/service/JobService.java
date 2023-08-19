@@ -1,6 +1,5 @@
 package com.cavdar.employeemanagement.domain.service;
 
-import com.cavdar.employeemanagement.domain.model.Department;
 import com.cavdar.employeemanagement.domain.model.Job;
 import com.cavdar.employeemanagement.domain.repository.JobRepository;
 import com.cavdar.employeemanagement.util.exception.JobNotFoundException;
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 public class JobService {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobService.class);
 
     private final JobRepository jobRepository;
     private final EmployeeService employeeService;
@@ -45,22 +44,25 @@ public class JobService {
     }
 
     public Job saveJob(Job job) {
+        if (job.getMinSalary() >= job.getMaxSalary()) {
+            throw new IllegalArgumentException("Minimum salary: '" + job.getMinSalary() + "' can not be equal or greater than maximum salary: '" + job.getMaxSalary() + "'");
+        }
+
         return this.jobRepository.save(job);
     }
 
     public Job updateJobById(Job updatedJob, Long id) {
-        Job job = this.getJobById(id);
+        Job job = getJobById(id);
 
         job.setName(updatedJob.getName());
         job.setMinSalary(updatedJob.getMinSalary());
         job.setMaxSalary(updatedJob.getMaxSalary());
 
-        return this.jobRepository.save(job);
+        return saveJob(job);
     }
 
     public void deleteJobById(Long id) {
-        Job job = this.jobRepository.findById(id)
-                .orElseThrow(() -> new JobNotFoundException(id));
+        Job job = getJobById(id);
 
         this.employeeService.updateJobByJob(null, job);
 

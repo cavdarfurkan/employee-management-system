@@ -13,7 +13,7 @@ You can access the api docs from: [Swagger API Docs](https://employee-system-vll
 
 JSON Web Token (JWT) is used for authentication and authorization.
 
-#### Login Endpoint
+### Login Endpoint
 
 To obtain a JWT, send a POST request to the following endpoint:
 
@@ -29,3 +29,9 @@ The request body should include the user's credentials in JSON format:
     "password": "string"
 }
 ```
+
+## Features
+
+- The system allows for CRUD operations for various entities.
+- Track and manage the work hours of employees.
+- Manage and track tasks, allowing admins and managers to assign tasks, set deadlines, and monitor progress.
