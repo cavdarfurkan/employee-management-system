@@ -39,6 +39,9 @@ public class TaskService {
         if (task.getStatus() == null) {
             TaskStatus pendingStatus = getTaskStatusByName(TaskStatusEnum.PENDING);
             task.setStatus(pendingStatus);
+        }
+
+        if (task.getAssignmentDate() == null) {
             task.setAssignmentDate(new Timestamp(System.currentTimeMillis()));
         }
 
@@ -60,7 +63,7 @@ public class TaskService {
     }
 
     public Task updateTaskById(Task updatedTask, Long id) {
-        Task task = this.getTaskById(id);
+        Task task = getTaskById(id);
 
         task.setTitle(updatedTask.getTitle());
         task.setDescription(updatedTask.getDescription());
@@ -68,7 +71,7 @@ public class TaskService {
         task.setEmployee(updatedTask.getEmployee());
         task.setStatus(updatedTask.getStatus());
 
-        return this.saveTask(task);
+        return saveTask(task);
     }
 
     public void deleteTaskById(Long id) {
